@@ -1,18 +1,30 @@
-import { clientId } from './config.json'
-
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
-if (!code) {
-    redirectToAuthCodeFlow(clientId);
+const clientId = sessionStorage.getItem("clientId");
+
+if (!clientId) {
+  const userInput = prompt("Enter clientId")?.toString();
+  if (userInput) {
+    sessionStorage.setItem("clientId", userInput); // Store the clientId in localStorage
+    redirectToAuthCodeFlow(userInput);
+  } else {
+    // Handle the case when the user cancels the prompt
+    console.log("User canceled the prompt.");
+  }
 } else {
-    console.log("Start")
+  if (!code) {
+    redirectToAuthCodeFlow(clientId);
+  } else {
+    console.log("Start");
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
-    const topTracks = await getTopTracks(accessToken, "medium", 5);
+    const topTracks = await getTopTracks(accessToken, "medium", 50);
     console.log(topTracks);
     populateUI(profile, topTracks);
     console.log(profile);
+    
+  }
 }
 
 export async function redirectToAuthCodeFlow(clientId: string) {
