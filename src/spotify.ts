@@ -90,7 +90,13 @@ async function fetchWebApi(endpoint: string, method: string, token: string): Pro
     return res;
 }
 
-export async function getTopTracks(token: string): Promise<any> {
+interface trackInfo {
+    name: string;
+    albumImageUrl: string;
+    artistNames: string[];
+}
+
+export async function getTopTracks(token: string): Promise<trackInfo[]> {
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
     const response = await fetchWebApi(
         'v1/me/top/tracks?time_range=short_term&limit=5',
@@ -105,7 +111,7 @@ export async function getTopTracks(token: string): Promise<any> {
     }));
 }
 
-function populateUI(profile: UserProfile, topTracks: string) {
+function populateUI(profile: UserProfile, topTracks: trackInfo[]) {
     document.getElementById("displayName")!.innerText = profile.display_name;
     if (profile.images[0]) {
         const profileImage = new Image(200, 200);
@@ -118,4 +124,13 @@ function populateUI(profile: UserProfile, topTracks: string) {
     document.getElementById("uri")!.setAttribute("href", profile.external_urls.spotify);
     document.getElementById("followers")!.innerText = profile.followers.total.toString();
     document.getElementById("country")!.innerText = profile.country;
+  
+    const topTracksContainer = document.getElementById("topTracks");
+    if (!topTracksContainer) return;
+  
+    topTracks.forEach((track) => {
+      const trackDiv = document.createElement("div");
+      trackDiv.textContent = track.name + " by " + track.artistNames.join(", ");
+      topTracksContainer.appendChild(trackDiv);
+    });
 }
