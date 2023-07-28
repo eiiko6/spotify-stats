@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Spotify data</h1>
+
+      <section id="profile">
+        <h2>Logged in as <span id="displayName"></span></h2>
+        <span id="avatar"></span>
+        <div style="list-style: none">
+            <div>User ID: <span id="id"></span></div>
+            <div>Email: <span id="email"></span></div>
+            <div>Profile link: <a id="uri" href="#"></a></div>
+            <div class="separator">- - -</div>
+            <div>Followers: <span id="followers"></span></div>
+            <div>Country: <span id="country"></span></div>
+        </div>
+      </section>
+
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
