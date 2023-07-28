@@ -9,9 +9,9 @@ if (!code) {
     console.log("Start")
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
-    const topTracks = await getTopTracks(accessToken, "medium", 5);
-    console.log(topTracks);
-    populateUI(profile, topTracks);
+    // const topTracks = await getTopTracks(accessToken, "medium", 5);
+    // console.log(topTracks);
+    // populateUI(profile, topTracks);
     console.log(profile);
 }
 
