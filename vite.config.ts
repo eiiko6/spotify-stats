@@ -5,4 +5,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   base: '/spotify-data/',
   plugins: [vue()],
+  build: {
+    target: 'esnext'
+  }
 })

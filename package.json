@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "cd dist && cp index.html 404.html && cd .. && gh-pages -d dist"
   },
   "devDependencies": {
     "typescript": "^5.0.2",
