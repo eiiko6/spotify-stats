@@ -9,7 +9,7 @@ if (!code) {
     console.log("Start")
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
-    const topTracks = await getTopTracks(accessToken);
+    const topTracks = await getTopTracks(accessToken, "medium", 5);
     console.log(topTracks);
     populateUI(profile, topTracks);
     console.log(profile);
@@ -96,10 +96,21 @@ interface trackInfo {
     artistNames: string[];
 }
 
-export async function getTopTracks(token: string): Promise<trackInfo[]> {
+export async function getTopTracks(token: string, time_range: string, limit: number): Promise<trackInfo[]> {
+
+    if (time_range == "long") {
+        document.getElementById("topTracksParent")!.innerHTML = `All-Time Top Tracks: <div id="topTracks"></div>`
+    }
+    else if (time_range == "medium") {
+        document.getElementById("topTracksParent")!.innerHTML = `Last 6 Months' Top Tracks: <div id="topTracks"></div>`
+    }
+    else if (time_range == "short") {
+        document.getElementById("topTracksParent")!.innerHTML = `Last Month's Top Tracks: <div id="topTracks"></div>`
+    };
+
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
     const response = await fetchWebApi(
-        'v1/me/top/tracks?time_range=short_term&limit=5',
+        'v1/me/top/tracks?time_range=' + time_range + '_term&limit=' + limit, // Request
         'GET',
         token
     );
@@ -111,7 +122,7 @@ export async function getTopTracks(token: string): Promise<trackInfo[]> {
     }));
 }
 
-function populateUI(profile: UserProfile, topTracks: trackInfo[]) {
+function populateUI(profile: UserProfile, topTracks: trackInfo[]) { // Display data on the page
     document.getElementById("displayName")!.innerText = profile.display_name;
     if (profile.images[0]) {
         const profileImage = new Image(200, 200);
@@ -128,7 +139,7 @@ function populateUI(profile: UserProfile, topTracks: trackInfo[]) {
     const topTracksContainer = document.getElementById("topTracks");
     if (!topTracksContainer) return;
   
-    topTracks.forEach((track) => {
+    topTracks.forEach((track) => { // Create new divs for each track in range
       const trackDiv = document.createElement("div");
       trackDiv.textContent = track.name + " by " + track.artistNames.join(", ");
       topTracksContainer.appendChild(trackDiv);
