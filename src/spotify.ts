@@ -19,7 +19,7 @@ if (!clientId) {
     console.log("Start");
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
-    const topTracks = await getTopTracks(accessToken, "medium", 50);
+    const topTracks = await getTopTracks(accessToken, "long", 5); // Top tracks list arguments
     console.log(topTracks);
     populateUI(profile, topTracks);
     console.log(profile);
@@ -111,13 +111,13 @@ interface trackInfo {
 export async function getTopTracks(token: string, time_range: string, limit: number): Promise<trackInfo[]> {
 
     if (time_range == "long") {
-        document.getElementById("topTracksParent")!.innerHTML = `All-Time Top Tracks: <div id="topTracks"></div>`
+        document.getElementById("topTracksParent")!.innerHTML = `<b>All-Time Top Tracks: </b><div id="topTracks"></div>`
     }
     else if (time_range == "medium") {
-        document.getElementById("topTracksParent")!.innerHTML = `Last 6 Months' Top Tracks: <div id="topTracks"></div>`
+        document.getElementById("topTracksParent")!.innerHTML = `<b>Last 6 Months' Top Tracks: </b><div id="topTracks"></div>`
     }
     else if (time_range == "short") {
-        document.getElementById("topTracksParent")!.innerHTML = `Last Month's Top Tracks: <div id="topTracks"></div>`
+        document.getElementById("topTracksParent")!.innerHTML = `<b>Last Month's Top Tracks: </b><div id="topTracks"></div>`
     };
 
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks

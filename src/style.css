@@ -41,6 +41,8 @@ h1 {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  border: solid;
+  border-radius: 25px;
 }
 
 .logo {
