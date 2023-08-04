@@ -143,6 +143,7 @@ function populateUI(profile: UserProfile, topTracks: trackInfo[]) { // Display d
     }
     document.getElementById("id")!.innerText = profile.id;
     document.getElementById("email")!.innerText = profile.email;
+    document.getElementById("product")!.innerText = profile.product;
     document.getElementById("uri")!.innerText = "https://open.spotify.com/user/" + profile.id;
     document.getElementById("uri")!.setAttribute("href", profile.external_urls.spotify);
     document.getElementById("followers")!.innerText = profile.followers.total.toString();
