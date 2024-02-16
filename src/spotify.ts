@@ -19,7 +19,7 @@ if (!clientId) {
     console.log("Start");
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
-    const topTracks = await getTopTracks(accessToken, "long", 5); // Top tracks list arguments
+    const topTracks = await getTopTracks(accessToken, "short", 20); // Top tracks list arguments
     console.log(topTracks);
     populateUI(profile, topTracks);
     console.log(profile);
@@ -153,8 +153,19 @@ function populateUI(profile: UserProfile, topTracks: trackInfo[]) { // Display d
     if (!topTracksContainer) return;
   
     topTracks.forEach((track) => { // Create new divs for each track in range
+      const trackContainer = document.createElement("div");
+      trackContainer.classList.add("track-container"); // Class for styling
+
+      const trackImage = new Image();
+      trackImage.src = track.albumImageUrl;
+      trackImage.alt = track.name;
+      trackImage.classList.add("track-image");
+      trackContainer.appendChild(trackImage);
+      
       const trackDiv = document.createElement("div");
       trackDiv.textContent = track.name + " by " + track.artistNames.join(", ");
-      topTracksContainer.appendChild(trackDiv);
+      trackContainer.appendChild(trackDiv);
+
+      topTracksContainer.appendChild(trackContainer);
     });
 }
