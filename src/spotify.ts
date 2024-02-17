@@ -19,7 +19,7 @@ if (!clientId) {
     console.log("Start");
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
-    const topTracks = await getTopTracks(accessToken, "short", 20); // Top tracks list arguments
+    const topTracks = await getTopTracks(accessToken, "long", 50); // Top tracks list arguments
     console.log(topTracks);
     populateUI(profile, topTracks);
     console.log(profile);
@@ -36,7 +36,7 @@ export async function redirectToAuthCodeFlow(clientId: string) {
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "http://localhost:5173/callback");
+    params.append("redirect_uri", "http://localhost:5173/callback"); // https://eiiko6.github.io/spotify-data/callback
     params.append("scope", "user-read-private user-read-email user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
