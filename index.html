@@ -10,52 +10,63 @@
       <h1>Spotify Data</h1>
 
       <section id="profile">
-        <h2>Logged in as <span id="displayName"></span></h2>
-        <span id="avatar"></span>
-        <div style="list-style: none">
-            <div>
-              <b>ID: </b>
-              <span id="id"></span>
-            </div>
+        <h2>Profile:</h2>
+        <div class="h-lists">
+          <div class="list h-list">
+              <div>
+                <b>Display Name: </b>
+                <span id="displayName"></span>
+              </div>
 
-            <div>
-              <b>Email: </b>
-              <span id="email"></span>
-            </div>
+              <div>
+                <b>ID: </b>
+                <span id="id"></span>
+              </div>
 
-            <div>
-              <b>Profile link: </b>
-              <a id="uri" href="#"></a>
-            </div>
+              <div>
+                <b>Email: </b>
+                <span id="email"></span>
+              </div>
 
-            <div>
-              <b>Product: </b>
-              <span id="product"></span>
-            </div>
+              <div>
+                <b>Profile link: </b>
+                <a id="uri" href="#"></a>
+              </div>
 
-            <div class="separator"><br></div>
+              <div>
+                <b>Product: </b>
+                <span id="product"></span>
+              </div>
 
-            <div>
-              <b>Followers: </b>
-              <span id="followers"></span>
-            </div>
-            
-            <div>
-              <b>Country: </b>
-              <span id="country"></span>
-            </div>
-
-            <div class="separator"><br><br></div>
-
-            <div id="topTracksParent">
-              <b>Top Tracks: </b>
-              <div id="topTracks"></div>
-            </div>
+              <div>
+                <b>Followers: </b>
+                <span id="followers"></span>
+              </div>
+              
+              <div>
+                <b>Country: </b>
+                <span id="country"></span>
+              </div>
+          </div>
+          <span id="avatar" class="h-list center"></span>
         </div>
+      </section>
+
+      <section id="topTracks">
+        <h2>Top Tracks:</h2>
+            <div id="topTracksParent" class="h-lists">
+              <b>All-Time Top Tracks: </b>
+              <div id="long-topTracks"></div>
+
+              <b>6-Month Top Tracks: </b>
+              <div id="medium-topTracks"></div>
+
+              <b>Last Month's Top Tracks: </b>
+              <div id="short-topTracks"></div>
+            </div>
       </section>
 
     </div>
     <script type="module" src="/src/main.ts"></script>
-    <script type="module" src="/src/spotify.ts"></script>
   </body>
 </html>

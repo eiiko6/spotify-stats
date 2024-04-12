@@ -3,7 +3,6 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
@@ -34,15 +33,15 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  margin: 0 auto; width: 50%;
 }
 
 #app {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
-  border: solid;
-  border-radius: 25px;
+  text-align: left;
+  min-width: 700px;
 }
 
 .logo {
@@ -85,27 +84,43 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
 .track-container {
-  display: flex; /* Use flexbox layout */
-  align-items: center; /* Align items vertically */
-  margin-bottom: 10px; /* Adjust spacing between tracks */
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .track-image {
-  width: 50px; /* Adjust width as needed */
-  height: 50px; /* Adjust height as needed */
-  margin-right: 10px; /* Adjust spacing between image and text */
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.list {
+  list-style: none
+}
+
+.list div {
+  text-align: left;
+}
+
+section {
+  background-color: #313131;
+  padding-left: 30px;
+  border-radius: 10px;
+  padding-bottom: 30px;
+  padding-top: 5px;
+  margin-top: 20px;
+}
+
+.h-lists {
+  display: flex;
+}
+
+.h-list {
+  flex: 1;
+}
+
+.center {
+  text-align: center;
 }
