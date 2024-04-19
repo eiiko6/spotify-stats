@@ -1,3 +1,5 @@
+// Everything is client-side cause I'm lazy
+
 import './style.css'
 
 const params = new URLSearchParams(window.location.search);
@@ -21,17 +23,22 @@ if (!clientId) {
     console.log("Start");
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
-    const topTracksLong = await getTopTracks(accessToken, "long", 50); // Top tracks list arguments
-    const topTracksMedium = await getTopTracks(accessToken, "medium", 50); // Top tracks list arguments
-    const topTracksShort = await getTopTracks(accessToken, "short", 50); // Top tracks list arguments
 
+    const topTracksLong = await getTopTracks(accessToken, "long", 50); // Top tracks list arguments
+    const topTracksMedium = await getTopTracks(accessToken, "medium", 50);
+    const topTracksShort = await getTopTracks(accessToken, "short", 50);
+    const topArtistsLong = await getTopArtists(accessToken, "long", 50); // Top artists list arguments
+    const topArtistsMedium = await getTopArtists(accessToken, "medium", 50);
+    const topArtistsShort = await getTopArtists(accessToken, "short", 50);
+
+    // Test
     console.log(topTracksLong);
     console.log(profile);
 
     populateUIProfile(profile);
-    populateUITracks("long-topTracks", topTracksLong)
-    populateUITracks("medium-topTracks", topTracksMedium)
-    populateUITracks("short-topTracks", topTracksShort)
+    populateUIElements("long-topTracks", topTracksLong, "long-topArtists", topArtistsLong)
+    populateUIElements("medium-topTracks", topTracksMedium, "medium-topArtists", topArtistsMedium)
+    populateUIElements("short-topTracks", topTracksShort, "short-topArtists", topArtistsShort)
   }
 }
 
@@ -115,6 +122,13 @@ interface trackInfo {
     artistNames: string[];
 }
 
+interface artistInfo {
+  name: string;
+  artistImageUrl: string;
+  artistFollowers: number;
+  artistProfileLink: string;
+}
+
 export async function getTopTracks(token: string, time_range: string, limit: number): Promise<trackInfo[]> {
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
     const response = await fetchWebApi(
@@ -128,6 +142,22 @@ export async function getTopTracks(token: string, time_range: string, limit: num
         albumImageUrl: item.album.images[0].url,
         artistNames: item.artists.map((artist: any) => artist.name),
     }));
+}
+
+export async function getTopArtists(token: string, time_range: string, limit: number): Promise<artistInfo[]> {
+  // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
+  const response = await fetchWebApi(
+      'v1/me/top/artists?time_range=' + time_range + '_term&limit=' + limit, // Request
+      'GET',
+      token
+  );
+  const data = await response.json(); // Parse the JSON content of the response
+  return data.items.map((item: any) => ({
+      name: item.name,
+      artistImageUrl: item.images.length > 0 ? item.images[0].url: '', // Check if images array is not empty
+      artistFollowers: item.followers.total,
+      artistProfileLink: item.href
+  }));
 }
 
 function populateUIProfile(profile: UserProfile) { // Display data on the page
@@ -146,11 +176,12 @@ function populateUIProfile(profile: UserProfile) { // Display data on the page
     document.getElementById("country")!.innerText = profile.country;
 }
 
-function populateUITracks(trackContainerId: string, topTracks: trackInfo[]) {
-  const topTracksContainer = document.getElementById(trackContainerId);
-    if (!topTracksContainer) return;
+function populateUIElements(tracksContainerId: string, tracks: trackInfo[], artistsContainerId: string, artists: artistInfo[]) {
+  // tracks
+  const tracksContainer = document.getElementById(tracksContainerId);
+    if (!tracksContainer) return;
   
-    topTracks.forEach((track) => { // Create new divs for each track in range
+    tracks.forEach((track) => { // Create new divs for each track in range
       const trackContainer = document.createElement("div");
       trackContainer.classList.add("track-container"); // Class for styling
 
@@ -164,6 +195,27 @@ function populateUITracks(trackContainerId: string, topTracks: trackInfo[]) {
       trackDiv.textContent = track.name + " by " + track.artistNames.join(", ");
       trackContainer.appendChild(trackDiv);
 
-      topTracksContainer.appendChild(trackContainer);
+      tracksContainer.appendChild(trackContainer);
+    });
+    
+  // Artists
+  const artistsContainer = document.getElementById(artistsContainerId);
+    if (!artistsContainer) return;
+  
+    artists.forEach((artist) => { // Create new divs for each artist in range
+      const artistContainer = document.createElement("div");
+      artistContainer.classList.add("artist-container"); // Class for styling
+
+      const artistImage = new Image();
+      artistImage.src = artist.artistImageUrl;
+      artistImage.alt = artist.name;
+      artistImage.classList.add("artist-image");
+      artistContainer.appendChild(artistImage);
+      
+      const artistDiv = document.createElement("div");
+      artistDiv.textContent = artist.name + ", " + artist.artistFollowers + " followers";
+      artistContainer.appendChild(artistDiv);
+
+      artistsContainer.appendChild(artistContainer);
     });
 }
