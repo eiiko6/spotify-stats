@@ -3,12 +3,12 @@ import './style.css'
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
-const clientId = sessionStorage.getItem("clientId");
+const clientId = localStorage.getItem("clientId");
 
 if (!clientId) {
   const userInput = prompt("Enter clientId")?.toString();
   if (userInput) {
-    sessionStorage.setItem("clientId", userInput); // Store the clientId in localStorage
+    localStorage.setItem("clientId", userInput); // Store the clientId in localStorage
     redirectToAuthCodeFlow(userInput);
   } else {
     // Handle the case when the user cancels the prompt
@@ -21,11 +21,17 @@ if (!clientId) {
     console.log("Start");
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
-    const topTracks = await getTopTracks(accessToken, "long", 50); // Top tracks list arguments
-    console.log(topTracks);
-    populateUI(profile, topTracks);
+    const topTracksLong = await getTopTracks(accessToken, "long", 50); // Top tracks list arguments
+    const topTracksMedium = await getTopTracks(accessToken, "medium", 50); // Top tracks list arguments
+    const topTracksShort = await getTopTracks(accessToken, "short", 50); // Top tracks list arguments
+
+    console.log(topTracksLong);
     console.log(profile);
-    
+
+    populateUIProfile(profile);
+    populateUITracks("long-topTracks", topTracksLong)
+    populateUITracks("medium-topTracks", topTracksMedium)
+    populateUITracks("short-topTracks", topTracksShort)
   }
 }
 
@@ -110,17 +116,6 @@ interface trackInfo {
 }
 
 export async function getTopTracks(token: string, time_range: string, limit: number): Promise<trackInfo[]> {
-
-    if (time_range == "long") {
-        document.getElementById("topTracksParent")!.innerHTML = `<b>All-Time Top Tracks: </b><div id="topTracks"></div>`
-    }
-    else if (time_range == "medium") {
-        document.getElementById("topTracksParent")!.innerHTML = `<b>Last 6 Months' Top Tracks: </b><div id="topTracks"></div>`
-    }
-    else if (time_range == "short") {
-        document.getElementById("topTracksParent")!.innerHTML = `<b>Last Month's Top Tracks: </b><div id="topTracks"></div>`
-    };
-
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
     const response = await fetchWebApi(
         'v1/me/top/tracks?time_range=' + time_range + '_term&limit=' + limit, // Request
@@ -135,7 +130,7 @@ export async function getTopTracks(token: string, time_range: string, limit: num
     }));
 }
 
-function populateUI(profile: UserProfile, topTracks: trackInfo[]) { // Display data on the page
+function populateUIProfile(profile: UserProfile) { // Display data on the page
     document.getElementById("displayName")!.innerText = profile.display_name;
     if (profile.images[0]) {
         const profileImage = new Image(120, 120);
@@ -149,8 +144,10 @@ function populateUI(profile: UserProfile, topTracks: trackInfo[]) { // Display d
     document.getElementById("uri")!.setAttribute("href", profile.external_urls.spotify);
     document.getElementById("followers")!.innerText = profile.followers.total.toString();
     document.getElementById("country")!.innerText = profile.country;
-  
-    const topTracksContainer = document.getElementById("topTracks");
+}
+
+function populateUITracks(trackContainerId: string, topTracks: trackInfo[]) {
+  const topTracksContainer = document.getElementById(trackContainerId);
     if (!topTracksContainer) return;
   
     topTracks.forEach((track) => { // Create new divs for each track in range

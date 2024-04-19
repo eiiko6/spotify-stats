@@ -34,13 +34,14 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
   margin: 0 auto; width: 50%;
+  text-align: center;
 }
 
 #app {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: left;
+  text-align: center;
   min-width: 700px;
 }
 
@@ -106,7 +107,6 @@ button:focus-visible {
 
 section {
   background-color: #313131;
-  padding-left: 30px;
   border-radius: 10px;
   padding-bottom: 30px;
   padding-top: 5px;
@@ -115,6 +115,9 @@ section {
 
 .h-lists {
   display: flex;
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-bottom: 10px;
 }
 
 .h-list {
@@ -123,4 +126,9 @@ section {
 
 .center {
   text-align: center;
+}
+
+.v-align {
+  display: flex;
+  flex-direction: column;
 }
