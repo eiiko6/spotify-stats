@@ -178,3 +178,7 @@ section {
 .hidden {
   display: none;
 }
+
+.number {
+  padding-right: 15px;
+}

@@ -181,19 +181,29 @@ function populateUIElements(tracksContainerId: string, tracks: trackInfo[], arti
   const tracksContainer = document.getElementById(tracksContainerId);
     if (!tracksContainer) return;
   
-    tracks.forEach((track) => { // Create new divs for each track in range
+    tracks.forEach((track, index) => { // Create new divs for each track in range
       const trackContainer = document.createElement("div");
       trackContainer.classList.add("track-container"); // Class for styling
 
+      // Track number
+      const trackNumber = (index + 1).toString();
+
+      const trackNumberDiv = document.createElement("div");
+      trackNumberDiv.textContent = trackNumber
+      trackNumberDiv.classList.add("number");
+      trackContainer.appendChild(trackNumberDiv);
+
+      // Track Image
       const trackImage = new Image();
       trackImage.src = track.albumImageUrl;
       trackImage.alt = track.name;
       trackImage.classList.add("track-image");
       trackContainer.appendChild(trackImage);
       
-      const trackDiv = document.createElement("div");
-      trackDiv.textContent = track.name + " by " + track.artistNames.join(", ");
-      trackContainer.appendChild(trackDiv);
+      // Track info
+      const trackInfoDiv = document.createElement("div");
+      trackInfoDiv.textContent = track.name + " by " + track.artistNames.join(", ");
+      trackContainer.appendChild(trackInfoDiv);
 
       tracksContainer.appendChild(trackContainer);
     });
@@ -202,16 +212,26 @@ function populateUIElements(tracksContainerId: string, tracks: trackInfo[], arti
   const artistsContainer = document.getElementById(artistsContainerId);
     if (!artistsContainer) return;
   
-    artists.forEach((artist) => { // Create new divs for each artist in range
+    artists.forEach((artist, index) => { // Create new divs for each artist in range
       const artistContainer = document.createElement("div");
       artistContainer.classList.add("artist-container"); // Class for styling
 
+      // Artist number
+      const artistNumber = (index + 1).toString();
+
+      const artistNumberDiv = document.createElement("div");
+      artistNumberDiv.textContent = artistNumber
+      artistNumberDiv.classList.add("number");
+      artistContainer.appendChild(artistNumberDiv);
+
+      // Artist image
       const artistImage = new Image();
       artistImage.src = artist.artistImageUrl;
       artistImage.alt = artist.name;
       artistImage.classList.add("artist-image");
       artistContainer.appendChild(artistImage);
       
+      // Artist info
       const artistDiv = document.createElement("div");
       artistDiv.textContent = artist.name + ", " + artist.artistFollowers + " followers";
       artistContainer.appendChild(artistDiv);
