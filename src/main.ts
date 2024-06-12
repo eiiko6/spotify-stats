@@ -34,6 +34,7 @@ if (!clientId) {
     // Test
     console.log(topTracksLong);
     console.log(profile);
+    console.log(getPlaylists(accessToken, profile.id)); // The idea was to create a "search in playlists" bar but it can involve too many requests
 
     populateUIProfile(profile);
     populateUIElements("long-topTracks", topTracksLong, "long-topArtists", topArtistsLong)
@@ -52,7 +53,7 @@ export async function redirectToAuthCodeFlow(clientId: string) {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://localhost:5173/callback"); // https://eiiko6.github.io/spotify-data/callback
-    params.append("scope", "user-read-private user-read-email user-top-read user-read-playback-state");
+    params.append("scope", "user-read-private user-read-email user-top-read user-read-playback-state playlist-read-private user-library-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -129,6 +130,11 @@ interface artistInfo {
   artistProfileLink: string;
 }
 
+interface playlistInfo {
+  playlistId: string;
+  tracksHref: string;
+}
+
 export async function getTopTracks(token: string, time_range: string, limit: number): Promise<trackInfo[]> {
     // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
     const response = await fetchWebApi(
@@ -144,6 +150,21 @@ export async function getTopTracks(token: string, time_range: string, limit: num
     }));
 }
 
+export async function getTracks(token: string, time_range: string, limit: number): Promise<trackInfo[]> {
+  // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
+  const response = await fetchWebApi(
+      'v1/me/tracks?time_range=' + time_range + '_term&limit=' + limit, // Request
+      'GET',
+      token
+  );
+  const data = await response.json(); // Parse the JSON content of the response
+  return data.items.map((item: any) => ({
+      name: item.name,
+      albumImageUrl: item.album.images[0].url,
+      artistNames: item.artists.map((artist: any) => artist.name),
+  }));
+}
+
 export async function getTopArtists(token: string, time_range: string, limit: number): Promise<artistInfo[]> {
   // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
   const response = await fetchWebApi(
@@ -157,6 +178,19 @@ export async function getTopArtists(token: string, time_range: string, limit: nu
       artistImageUrl: item.images.length > 0 ? item.images[0].url: '', // Check if images array is not empty
       artistFollowers: item.followers.total,
       artistProfileLink: item.href
+  }));
+}
+
+export async function getPlaylists(token: string, id: string): Promise<playlistInfo[]> {
+  const response = await fetchWebApi(
+      'v1/users/' + id +'/playlists?limit=50&offset=0',
+      'GET',
+      token
+  );
+  const data = await response.json(); // Parse the JSON content of the response
+  return data.items.map((item: any) => ({
+      playlistId: item.id,
+      tracksHref: item.tracks.href
   }));
 }
 
